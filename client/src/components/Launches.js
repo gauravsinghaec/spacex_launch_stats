@@ -18,7 +18,7 @@ const useStyles = makeStyles(theme => ({
   },
   list: {
 		width: '100%',
-		height: '100vh',
+		height: '60vh',
 		overflow: "auto",
     maxWidth: "50vw",
     backgroundColor: theme.palette.background.paper,
@@ -26,11 +26,25 @@ const useStyles = makeStyles(theme => ({
   inline: {
     display: 'inline',
 	},
+	indicator: {
+		backgroundColor: ({ color }) => color,
+		borderRadius: "50%",
+		display: "inline-block",
+		marginLeft: "20px",
+		height: "10px",
+		width: "10px",
+	},
 	progress: {
-    margin: theme.spacing(2),
+		justifyContent: "center",
+		
   },
 }));
-
+function Indicator (props) {
+	const classes = useStyles(props);
+	return (
+		<span className={classes.indicator} />
+	);
+}
 export default function Launches () {
 	const classes = useStyles();
 	return (
@@ -63,7 +77,7 @@ export default function Launches () {
 						if (error) {
 							return <p>Error :(</p>;
 						}
-						return data.launches.map(({ flight_number, mission_name, launch_year }) => (
+						return data.launches.map(({ flight_number, mission_name, launch_year, launch_success }) => (
 							<React.Fragment  key={flight_number}>
 								<ListItem alignItems="flex-start">
 									<ListItemText
@@ -78,11 +92,16 @@ export default function Launches () {
 												>
 													Year: {launch_year}
 												</Typography>
+												{launch_success ? (
+														<Indicator color="green" />
+													) : (
+														<Indicator color="red" />
+													)}
 											</React.Fragment>
 										}
 									/>
 								</ListItem>
-								<Divider variant="inset" component="li" />
+								<Divider component="li" />
 							</React.Fragment>
 						));
 					}}

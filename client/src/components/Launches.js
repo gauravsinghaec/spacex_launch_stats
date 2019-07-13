@@ -15,13 +15,21 @@ import {
 const useStyles = makeStyles(theme => ({
   root: {
 		flexShrink: 0,
-  },
-  list: {
+	},
+	main: {
+		display: "flex",
+		alignItems: "center",
+		justifyContent: "center",
 		width: '100%',
 		height: '60vh',
 		overflow: "auto",
     maxWidth: "50vw",
     backgroundColor: theme.palette.background.paper,
+	},
+  list: {
+		height: "100%",
+		justifyContent: "flex-end",
+		width: "100%",
   },
   inline: {
     display: 'inline',
@@ -34,10 +42,6 @@ const useStyles = makeStyles(theme => ({
 		height: "10px",
 		width: "10px",
 	},
-	progress: {
-		justifyContent: "center",
-		
-  },
 }));
 function Indicator (props) {
 	const classes = useStyles(props);
@@ -56,8 +60,8 @@ export default function Launches () {
 			className={classes.root}
 		>
 			<Typography variant="h2">Launches</Typography>
-			<br />
-			<List className={classes.list}>
+
+			<div className={classes.main}>
 				<Query
 					query={gql`
 						{
@@ -72,41 +76,47 @@ export default function Launches () {
 				>
 					{({ loading, error, data }) => {
 						if (loading) {
-							return <CircularProgress className={classes.progress} color="secondary" />
+							return (
+								<CircularProgress className={classes.progress} color="primary" />
+							)
 						}
 						if (error) {
 							return <p>Error :(</p>;
 						}
-						return data.launches.map(({ flight_number, mission_name, launch_year, launch_success }) => (
-							<React.Fragment  key={flight_number}>
-								<ListItem alignItems="flex-start">
-									<ListItemText
-										primary={mission_name}
-										secondary={
-											<React.Fragment>
-												<Typography
-													component="span"
-													variant="body1"
-													className={classes.inline}
-													color="textPrimary"
-												>
-													Year: {launch_year}
-												</Typography>
-												{launch_success ? (
-														<Indicator color="green" />
-													) : (
-														<Indicator color="red" />
-													)}
-											</React.Fragment>
-										}
-									/>
-								</ListItem>
-								<Divider component="li" />
-							</React.Fragment>
-						));
+						return (
+							<List className={classes.list}>
+								{data.launches.map(({ flight_number, mission_name, launch_year, launch_success }) => (
+								<React.Fragment  key={flight_number}>
+									<ListItem alignItems="flex-start">
+										<ListItemText
+											primary={mission_name}
+											secondary={
+												<React.Fragment>
+													<Typography
+														component="span"
+														variant="body1"
+														className={classes.inline}
+														color="textPrimary"
+													>
+														Year: {launch_year}
+													</Typography>
+													{launch_success ? (
+															<Indicator color="green" />
+														) : (
+															<Indicator color="red" />
+														)}
+												</React.Fragment>
+											}
+										/>
+									</ListItem>
+									<Divider component="li" />
+								</React.Fragment>
+								))};
+							</List>
+						)
 					}}
 				</Query>
-			</List>
+			</div>
 		</Grid>
 	);
 }

@@ -3,15 +3,28 @@ import { gql } from 'apollo-boost';
 import { Query } from 'react-apollo';
 import { makeStyles } from '@material-ui/core/styles';
 import {
+  Button,
+  Card,
+  CardContent,
+  CardActions,
 	CircularProgress,
 	Divider,
 	Grid,
 	List,
 	ListItem,
-	ListItemText,
 	Typography,
 } from '@material-ui/core';
 
+const LaunchesQuery = gql`
+  {
+    launches {
+      flight_number
+      mission_name
+      launch_year
+      launch_success
+    }
+  }
+`
 const useStyles = makeStyles(theme => ({
   root: {
 		flexShrink: 0,
@@ -24,7 +37,7 @@ const useStyles = makeStyles(theme => ({
 		height: '60vh',
 		overflow: "auto",
     maxWidth: "50vw",
-    backgroundColor: theme.palette.background.paper,
+    backgroundColor: theme.palette.common.black,
 	},
   list: {
 		height: "100%",
@@ -41,7 +54,21 @@ const useStyles = makeStyles(theme => ({
 		marginLeft: "20px",
 		height: "10px",
 		width: "10px",
-	},
+  },
+  card: {
+    width: "100%",
+  },
+  bullet: {
+    display: 'inline-block',
+    margin: '0 2px',
+    transform: 'scale(0.8)',
+  },
+  title: {
+    fontSize: 14,
+  },
+  pos: {
+    marginBottom: 12,
+  },
 }));
 function Indicator (props) {
 	const classes = useStyles(props);
@@ -63,16 +90,7 @@ export default function Launches () {
 
 			<div className={classes.main}>
 				<Query
-					query={gql`
-						{
-							launches {
-								flight_number
-								mission_name
-								launch_year
-								launch_success
-							}
-						}
-					`}
+					query={LaunchesQuery}
 				>
 					{({ loading, error, data }) => {
 						if (loading) {
@@ -81,33 +99,38 @@ export default function Launches () {
 							)
 						}
 						if (error) {
-							return <p>Error :(</p>;
+							return <p>An Error Occeured :(</p>;
 						}
 						return (
 							<List className={classes.list}>
 								{data.launches.map(({ flight_number, mission_name, launch_year, launch_success }) => (
 								<React.Fragment  key={flight_number}>
 									<ListItem alignItems="flex-start">
-										<ListItemText
-											primary={mission_name}
-											secondary={
-												<React.Fragment>
-													<Typography
-														component="span"
-														variant="body1"
-														className={classes.inline}
-														color="textPrimary"
-													>
-														Year: {launch_year}
-													</Typography>
-													{launch_success ? (
-															<Indicator color="green" />
-														) : (
-															<Indicator color="red" />
-														)}
-												</React.Fragment>
-											}
-										/>
+                    <Card className={classes.card}>
+                      <CardContent>
+                        <Typography className={classes.title} color="textSecondary" gutterBottom>
+                          {mission_name}
+                        </Typography>
+                        <Typography
+                          component="span"
+                          variant="body1"
+                          className={classes.inline}
+                          color="textPrimary"
+                        >
+                          Year: {launch_year}
+                        </Typography>
+                        {launch_success ? (
+                          <Indicator color="green" />
+                        ) : (
+                          <Indicator color="red" />
+                        )}
+                        <Typography variant="body2" component="p">
+                        </Typography>
+                      </CardContent>
+                      <CardActions>
+                        <Button size="small" color="primary">Learn More</Button>
+                      </CardActions>
+                    </Card>
 									</ListItem>
 									<Divider component="li" />
 								</React.Fragment>

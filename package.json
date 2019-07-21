@@ -20,7 +20,8 @@
     "express": "^4.17.1",
     "express-graphql": "^0.8.0",
     "graphql": "^14.4.2",
-    "react-apollo": "^2.5.8"
+    "react-apollo": "^2.5.8",
+    "react-router-dom": "^5.0.1"
   },
   "devDependencies": {
     "nodemon": "^1.19.1"

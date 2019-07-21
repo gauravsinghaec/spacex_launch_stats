@@ -1,9 +1,9 @@
 import React from 'react';
 import { gql } from 'apollo-boost';
 import { Query } from 'react-apollo';
+import { Link } from "react-router-dom";
 import { makeStyles } from '@material-ui/core/styles';
 import {
-  Button,
   Card,
   CardContent,
   CardActions,
@@ -95,7 +95,7 @@ export default function Launches () {
 					{({ loading, error, data }) => {
 						if (loading) {
 							return (
-								<CircularProgress className={classes.progress} color="primary" />
+								<CircularProgress className={classes.progress} color="white" />
 							)
 						}
 						if (error) {
@@ -128,7 +128,7 @@ export default function Launches () {
                         </Typography>
                       </CardContent>
                       <CardActions>
-                        <Button size="small" color="primary">Learn More</Button>
+                        <Link to={`/launch/${flight_number}`} color="primary">Learn More</Link>
                       </CardActions>
                     </Card>
 									</ListItem>
